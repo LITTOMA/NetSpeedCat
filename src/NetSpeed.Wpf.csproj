@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
+		<PackageId>NetSpeed</PackageId>
+		<Authors>LITTOMA</Authors>
+		<Product>NetSpeed</Product>
+		<Copyright>© 2022 LITTOMA All Rights Reserved</Copyright>
+		<PackageProjectUrl>https://github.com/LITTOMA/NetSpeed</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/LITTOMA/NetSpeed.git</RepositoryUrl>
+		<RepositoryType>Git</RepositoryType>
+		<Description>Network speed viewer.</Description>
+		<ApplicationIcon>icon.ico</ApplicationIcon>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageIconUrl />
+		<AssemblyName>NetSpeed</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="cat.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="PInvoke.User32" Version="0.7.104" />
+		<PackageReference Include="Serilog" Version="2.10.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.zh-CN.resx">
+			<Generator></Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Properties\Resources.zh-Hans.resx">
+		  <Generator></Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Properties\Resources.en.resx">
+		  <Generator></Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Resources\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="cat.jpg" />
+	</ItemGroup>
+
+</Project>

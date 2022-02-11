@@ -1,0 +1,59 @@
+﻿<Window
+    x:Class="NetSpeed.Wpf.AboutWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:NetSpeed.Wpf"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prop="clr-namespace:NetSpeed.Wpf.Properties"
+    Title="{x:Static prop:Resources.AboutNetSpeedCat}"
+    Width="Auto"
+    Height="Auto"
+    MinWidth="200"
+    ResizeMode="NoResize"
+    SizeToContent="WidthAndHeight"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="SingleBorderWindow"
+    mc:Ignorable="d">
+    <Border
+        Margin="8"
+        BorderBrush="LightGray"
+        BorderThickness="1"
+        CornerRadius="2">
+        <StackPanel Margin="8" Orientation="Horizontal">
+            <Grid Width="128" Height="128">
+                <Image
+                    HorizontalAlignment="Right"
+                    Source="cat.jpg"
+                    Stretch="UniformToFill" />
+                <TextBlock
+                    Margin="4"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    FontFamily="Arial"
+                    FontSize="16"
+                    FontWeight="Black"
+                    Foreground="White"
+                    Text="{x:Static prop:Resources.AppName}"
+                    TextWrapping="WrapWithOverflow" />
+            </Grid>
+            <StackPanel Margin="8" VerticalAlignment="Center">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,8,0"
+                        HorizontalAlignment="Center"
+                        Text="{x:Static prop:Resources.Version}" />
+                    <TextBlock x:Name="versionText" Text="0.0" />
+                </StackPanel>
+                <TextBlock HorizontalAlignment="Center">
+                    <Hyperlink
+                        x:Name="updateUrl"
+                        NavigateUri=""
+                        RequestNavigate="Hyperlink_RequestNavigate">
+                        <TextBlock Text="{x:Static prop:Resources.CheckForUpdate}" />
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

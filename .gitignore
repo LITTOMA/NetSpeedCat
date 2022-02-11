@@ -1,0 +1,9 @@
+# C# Project Ignore File
+**/bin
+**/obj
+**/packages
+
+.vs
+.vscode
+*.user
+*/AppPackages/*

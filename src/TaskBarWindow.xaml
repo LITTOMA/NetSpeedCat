@@ -1,0 +1,92 @@
+﻿<Window
+    x:Class="NetSpeed.Wpf.TaskBarWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:NetSpeed.Wpf"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prop="clr-namespace:NetSpeed.Wpf.Properties"
+    Title="TaskBarWindow"
+    Height="30"
+    Background="Transparent"
+    MouseDown="Window_MouseDown"
+    ResizeMode="NoResize"
+    ShowInTaskbar="False"
+    Visibility="Visible"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" />
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <SolidColorBrush x:Key="NormalTextColor" Color="White" />
+    </Window.Resources>
+    <Window.ContextMenu>
+        <ContextMenu x:Name="AppContexMenu">
+            <MenuItem
+                Name="MainWindowVisibleItem"
+                Click="MainWindowVisible_Click"
+                Header="{x:Static prop:Resources.NetInterfaces}" />
+            <MenuItem
+                Name="StartupItem"
+                Click="Startup_Click"
+                Header="{x:Static prop:Resources.Startup}" />
+            <MenuItem
+                Name="AboutItem"
+                Click="AboutItem_Click"
+                Header="{x:Static prop:Resources.About}" />
+            <MenuItem
+                Name="ExitItem"
+                Click="Exit_Click"
+                Header="{x:Static prop:Resources.Exit}" />
+        </ContextMenu>
+    </Window.ContextMenu>
+    <Grid
+        x:Name="ContentArea"
+        Margin="4"
+        VerticalAlignment="Center"
+        Background="Transparent">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="4,0,0,0"
+            VerticalAlignment="Center"
+            FontSize="12"
+            Foreground="DeepSkyBlue"
+            Text="↑" />
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="4,0,0,0"
+            VerticalAlignment="Center"
+            FontSize="12"
+            Foreground="DarkOrange"
+            Text="↓" />
+
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Foreground="{DynamicResource NormalTextColor}"
+            Text="{Binding UploadSpeed}" />
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Foreground="{DynamicResource NormalTextColor}"
+            Text="{Binding DownloadSpeed}" />
+    </Grid>
+</Window>
