@@ -31,7 +31,7 @@ cd NetSpeedCat/src
 dotnet publish -c Release -o ../bin/Release
 ```
 
-# Buy me a coffee
+# Buy me a fish
 Net Speed Cat is a free open source software, if it helps you, please support me by purchasing it on the [Microsoft Store](https://www.microsoft.com/store/apps/9NVX14QXWWM1).
 
 <div align="center">
