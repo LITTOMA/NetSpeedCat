@@ -9,6 +9,10 @@ I really like the way NetSpeedMonitor displays the internet speed on the taskbar
 
 I tried to find various alternatives, but none of them met my needs. Until I realised, hey, I'm a software developer too, why not develop one myself? And that's how Net Speed Cat became true.
 
+<div align="center">
+<img src="Screenshot.png"/>
+</div>
+
 # How to use
 1. Install the app from the store or download it from the releases page.
 2. Open the app.
