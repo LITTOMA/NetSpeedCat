@@ -44,6 +44,8 @@ namespace NetSpeed.Wpf
 
             UploadSpeed = "0.00 B/s";
             DownloadSpeed = "0.00 B/s";
+
+            MinHeight = TaskBarHelper.GetTaskBarSize().Height;
         }
 
         public TaskBarWindow(ObservableCollection<NetSpeedItem> netSpeedItems) : this()
@@ -229,20 +231,20 @@ namespace NetSpeed.Wpf
             // Invoke on main thread
             Dispatcher.Invoke(() =>
             {
-                Serilog.Log.Information("Updating taskbar window...");
-                var taskbarSize = TaskBarHelper.GetTaskBarSize();
-                var taskbarLocation = TaskBarHelper.GetTaskBarLocation();
-                if (taskbarLocation == TaskBarHelper.TaskBarLocation.Top || taskbarLocation == TaskBarHelper.TaskBarLocation.Bottom)
-                {
-                    Width = 100;
-                    Height = taskbarSize.Height;
-                }
-                else if (taskbarLocation == TaskBarHelper.TaskBarLocation.Left || taskbarLocation == TaskBarHelper.TaskBarLocation.Right)
-                {
-                    Width = taskbarSize.Width;
-                    Height = ContentArea.ActualHeight + 10;
-                }
-                Serilog.Log.Information($"Height: {Height}, Width: {Width}");
+                // Serilog.Log.Information("Updating taskbar window...");
+                // var taskbarSize = TaskBarHelper.GetTaskBarSize();
+                // var taskbarLocation = TaskBarHelper.GetTaskBarLocation();
+                // if (taskbarLocation == TaskBarHelper.TaskBarLocation.Top || taskbarLocation == TaskBarHelper.TaskBarLocation.Bottom)
+                // {
+                //     Width = 100;
+                //     Height = taskbarSize.Height;
+                // }
+                // else if (taskbarLocation == TaskBarHelper.TaskBarLocation.Left || taskbarLocation == TaskBarHelper.TaskBarLocation.Right)
+                // {
+                //     Width = taskbarSize.Width;
+                //     Height = ContentArea.ActualHeight + 10;
+                // }
+                // Serilog.Log.Information($"Height: {Height}, Width: {Width}");
 
                 // Unlock the window
                 WindowPos.SetIsLocked(this, false);
