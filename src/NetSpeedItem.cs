@@ -75,8 +75,8 @@ namespace NetSpeed.Wpf
             }
 
             // Get the current bytes sent and received
-            var bytesSent = _interface.GetIPv4Statistics().BytesSent;
-            var bytesReceived = _interface.GetIPv4Statistics().BytesReceived;
+            var bytesSent = _interface.GetIPStatistics().BytesSent;
+            var bytesReceived = _interface.GetIPStatistics().BytesReceived;
             Serilog.Log.Information($"Sent: {bytesSent}, Received: {bytesReceived}");
 
             // Calculate the speed
