@@ -2,21 +2,22 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
+		<TargetFramework>net48</TargetFramework>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
-		<PackageId>NetSpeed</PackageId>
+		<PackageId>NetSpeedCat</PackageId>
 		<Authors>LITTOMA</Authors>
-		<Product>NetSpeed</Product>
+		<Product>NetSpeedCat</Product>
 		<Copyright>© 2022 LITTOMA All Rights Reserved</Copyright>
-		<PackageProjectUrl>https://github.com/LITTOMA/NetSpeed</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/LITTOMA/NetSpeed.git</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/LITTOMA/NetSpeedCat</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/LITTOMA/NetSpeedCat.git</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
 		<Description>Network speed viewer.</Description>
 		<ApplicationIcon>icon.ico</ApplicationIcon>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageIconUrl />
-		<AssemblyName>NetSpeed</AssemblyName>
+		<AssemblyName>NetSpeedCat</AssemblyName>
+		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -24,10 +25,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22000.196" />
 		<PackageReference Include="PInvoke.User32" Version="0.7.104" />
 		<PackageReference Include="Serilog" Version="2.10.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
