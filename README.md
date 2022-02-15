@@ -3,7 +3,7 @@ Display the right net speed at the right position on Windows 11.
 
 <a href="https://github.com/LITTOMA/NetSpeedCat/releases/latest">![](https://img.shields.io/badge/Download%20from-Github-blue)</a>
 
-<a href="https://www.microsoft.com/store/apps/9NVX14QXWWM1"><img src="get-it-from-MS.png" width="120"></a><br/>
+<a href="https://www.microsoft.com/store/apps/9NVX14QXWWM1"><img src="get-it-from-MS.png" width="140"></a><br/>
 
 # What is this?
 I really like the way NetSpeedMonitor displays the internet speed on the taskbar via Desk Band. Unfortunately, Microsoft removed the Desk Band feature in Windows 11 (well done, Microsoft!).
