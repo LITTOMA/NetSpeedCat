@@ -92,7 +92,13 @@ namespace NetSpeed.Wpf
 
         private void InitializeWindowsPlatform()
         {
-            StartupItem.IsChecked = AppConfig.Default.GetStartup();
+            StartupItem.IsVisibleChanged += (s, e) =>
+            {
+                if (StartupItem.IsVisible)
+                {
+                    StartupItem.IsChecked = AppConfig.Default.GetStartup();
+                }
+            };
 
             // Listen to system theme change
             Microsoft.Win32.SystemEvents.UserPreferenceChanged += (s, e) =>

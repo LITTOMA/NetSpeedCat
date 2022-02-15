@@ -96,14 +96,21 @@ namespace NetSpeed.Wpf
                 ((MainWindow)Application.Current.MainWindow).ToggleVisibility();
             });
 
-            var startupItem = notifyIcon.ContextMenuStrip.Items.Add(NetSpeed.Wpf.Properties.Resources.Startup, null, (s, e) =>
+            var startupItem =
+                (System.Windows.Forms.ToolStripMenuItem)notifyIcon.ContextMenuStrip.Items.Add(NetSpeed.Wpf.Properties.Resources.Startup, null, (s, e) =>
+                {
+                    // Toggle toolstrip item checked state
+                    var item = s as System.Windows.Forms.ToolStripMenuItem;
+                    item.Checked = !item.Checked;
+                    AppConfig.Default.SetStartup(item.Checked);
+                });
+            startupItem.VisibleChanged += (s, e) =>
             {
-                // Toggle toolstrip item checked state
-                var item = s as System.Windows.Forms.ToolStripMenuItem;
-                item.Checked = !item.Checked;
-                AppConfig.Default.SetStartup(item.Checked);
-            });
-            ((System.Windows.Forms.ToolStripMenuItem)startupItem).Checked = AppConfig.Default.GetStartup();
+                if (startupItem.Visible)
+                {
+                    startupItem.Checked = AppConfig.Default.GetStartup();
+                }
+            };
 
             notifyIcon.ContextMenuStrip.Items.Add(NetSpeed.Wpf.Properties.Resources.AboutNetSpeedCat, null, (s, e) =>
             {
