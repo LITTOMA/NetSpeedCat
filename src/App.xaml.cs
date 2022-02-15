@@ -24,6 +24,8 @@ namespace NetSpeed.Wpf
 
         /// <summary>The mutex.</summary>
         private Mutex mutex;
+        private AboutWindow aboutWindow;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
 
         #endregion
 
@@ -74,6 +76,50 @@ namespace NetSpeed.Wpf
 
             // Terminate this instance.
             Shutdown();
+        }
+
+        public void About()
+        {
+            aboutWindow = aboutWindow ?? new AboutWindow();
+            aboutWindow.ShowDialog();
+        }
+        public void ShowNotifyIcon()
+        {
+            notifyIcon = new System.Windows.Forms.NotifyIcon();
+            notifyIcon.Icon = NetSpeed.Wpf.Properties.Resources.icon;
+            notifyIcon.Visible = true;
+
+            // Setup context menu
+            notifyIcon.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
+            notifyIcon.ContextMenuStrip.Items.Add(NetSpeed.Wpf.Properties.Resources.NetInterfaces, null, (s, e) =>
+            {
+                ((MainWindow)Application.Current.MainWindow).ToggleVisibility();
+            });
+
+            var startupItem = notifyIcon.ContextMenuStrip.Items.Add(NetSpeed.Wpf.Properties.Resources.Startup, null, (s, e) =>
+            {
+                // Toggle toolstrip item checked state
+                var item = s as System.Windows.Forms.ToolStripMenuItem;
+                item.Checked = !item.Checked;
+                AppConfig.Default.SetStartup(item.Checked);
+            });
+            ((System.Windows.Forms.ToolStripMenuItem)startupItem).Checked = AppConfig.Default.GetStartup();
+
+            notifyIcon.ContextMenuStrip.Items.Add(NetSpeed.Wpf.Properties.Resources.AboutNetSpeedCat, null, (s, e) =>
+            {
+                notifyIcon.Visible = false;
+                notifyIcon.Dispose();
+                About();
+            });
+
+            notifyIcon.ContextMenuStrip.Items.Add(NetSpeed.Wpf.Properties.Resources.Exit, null, (s, e) =>
+            {
+                notifyIcon.Visible = false;
+                notifyIcon.Dispose();
+                Shutdown();
+            });
+
+            notifyIcon.DoubleClick += (s, e) => ((MainWindow)Application.Current.MainWindow).ToggleVisibility();
         }
 
         #endregion

@@ -17,7 +17,6 @@ namespace NetSpeed.Wpf
         private readonly ObservableCollection<NetSpeedItem> netSpeedItems;
         private string uploadSpeed;
         private string downloadSpeed;
-        private System.Windows.Forms.NotifyIcon notifyIcon;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -93,53 +92,7 @@ namespace NetSpeed.Wpf
 
         private void InitializeWindowsPlatform()
         {
-            // Only shows notify icon on Windows 11
-            if (Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= 22000)
-            {
-                notifyIcon = new System.Windows.Forms.NotifyIcon();
-                notifyIcon.Icon = Properties.Resources.icon;
-                notifyIcon.Visible = true;
-
-                // Setup context menu
-                notifyIcon.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
-                notifyIcon.ContextMenuStrip.Items.Add(Properties.Resources.NetInterfaces, null, (s, e) =>
-                {
-                    ((MainWindow)Application.Current.MainWindow).ToggleVisibility();
-                });
-
-                var startupItem = notifyIcon.ContextMenuStrip.Items.Add(Properties.Resources.Startup, null, (s, e) =>
-                {
-                    // Toggle toolstrip item checked state
-                    var item = s as System.Windows.Forms.ToolStripMenuItem;
-                    item.Checked = !item.Checked;
-                    AppConfig.Default.SetStartup(item.Checked);
-                });
-                ((System.Windows.Forms.ToolStripMenuItem)startupItem).Checked = AppConfig.Default.GetStartup();
-
-                notifyIcon.ContextMenuStrip.Items.Add(Properties.Resources.AboutNetSpeedCat, null, (s, e) =>
-                {
-                    notifyIcon.Visible = false;
-                    notifyIcon.Dispose();
-                    About();
-                });
-
-                notifyIcon.ContextMenuStrip.Items.Add(Properties.Resources.Exit, null, (s, e) =>
-                {
-                    notifyIcon.Visible = false;
-                    notifyIcon.Dispose();
-                    ExitApp();
-                });
-
-                notifyIcon.DoubleClick += (s, e) => ((MainWindow)Application.Current.MainWindow).ToggleVisibility();
-            }
-
             StartupItem.IsChecked = AppConfig.Default.GetStartup();
-
-            // Windows 10 initializations
-            if (Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build < 22000)
-            {
-                // TODO
-            }
 
             // Listen to system theme change
             Microsoft.Win32.SystemEvents.UserPreferenceChanged += (s, e) =>
@@ -178,11 +131,6 @@ namespace NetSpeed.Wpf
         {
             // Set Foreground of all TextBlocks to black using resource dictionary
             Resources["NormalTextColor"] = new SolidColorBrush(Colors.Black);
-        }
-
-        private void ExitApp()
-        {
-            Application.Current.Shutdown();
         }
 
         private void NetSpeedItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -231,21 +179,6 @@ namespace NetSpeed.Wpf
             // Invoke on main thread
             Dispatcher.Invoke(() =>
             {
-                // Serilog.Log.Information("Updating taskbar window...");
-                // var taskbarSize = TaskBarHelper.GetTaskBarSize();
-                // var taskbarLocation = TaskBarHelper.GetTaskBarLocation();
-                // if (taskbarLocation == TaskBarHelper.TaskBarLocation.Top || taskbarLocation == TaskBarHelper.TaskBarLocation.Bottom)
-                // {
-                //     Width = 100;
-                //     Height = taskbarSize.Height;
-                // }
-                // else if (taskbarLocation == TaskBarHelper.TaskBarLocation.Left || taskbarLocation == TaskBarHelper.TaskBarLocation.Right)
-                // {
-                //     Width = taskbarSize.Width;
-                //     Height = ContentArea.ActualHeight + 10;
-                // }
-                // Serilog.Log.Information($"Height: {Height}, Width: {Width}");
-
                 // Unlock the window
                 WindowPos.SetIsLocked(this, false);
                 Serilog.Log.Information("Unlocked window");
@@ -277,7 +210,7 @@ namespace NetSpeed.Wpf
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            ExitApp();
+            Application.Current.Shutdown();
         }
 
         private void Startup_Click(object sender, RoutedEventArgs e)
@@ -298,13 +231,7 @@ namespace NetSpeed.Wpf
 
         private void AboutItem_Click(object sender, RoutedEventArgs e)
         {
-            About();
-        }
-
-        private void About()
-        {
-            var aboutWindow = new AboutWindow();
-            aboutWindow.Show();
+            ((App)App.Current).About();
         }
     }
 }

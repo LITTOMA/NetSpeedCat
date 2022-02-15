@@ -52,6 +52,8 @@ namespace NetSpeed.Wpf
             {
                 Hide();
             }
+
+            ((App)Application.Current).ShowNotifyIcon();
         }
 
         /// <summary>Brings main window to foreground.</summary>
