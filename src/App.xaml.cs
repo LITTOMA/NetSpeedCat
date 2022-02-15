@@ -35,7 +35,9 @@ namespace NetSpeed.Wpf
         private void AppOnStartup(object sender, StartupEventArgs e)
         {
             Log.Logger = new LoggerConfiguration()
+#if DEBUG
                 .WriteTo.Console()
+#endif
                 .WriteTo.File(Path.Combine(AppConfig.Default.AppDataFolder, "nsv.log"), fileSizeLimitBytes: 1048576, shared: true)
                 .CreateLogger();
 
