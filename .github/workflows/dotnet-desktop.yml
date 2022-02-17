@@ -16,7 +16,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1
       
     - name: setup nuget
-      uses: NuGet/setup-nuget@v1.0.2
+      uses: NuGet/setup-nuget@v1
 
     - name: build
       run: |
