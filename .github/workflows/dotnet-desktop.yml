@@ -20,6 +20,7 @@ jobs:
 
     - name: build
       run: |
+        pwd
         cd $GITHUB_WORKSPACE/src
         nuget restore
         msbuild /p:platform="Any CPU" /p:configuration="Release"
