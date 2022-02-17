@@ -28,5 +28,5 @@ jobs:
     - name: upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
-        name: build
+        name: netspeedcat
         path: src/bin/
