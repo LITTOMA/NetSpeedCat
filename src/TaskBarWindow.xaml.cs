@@ -196,7 +196,16 @@ namespace NetSpeed.Wpf
                 WindowPos.SetIsLocked(this, true);
                 Serilog.Log.Information("Locked window");
 
-                Show();
+                try
+                {
+                    Show();
+                }
+                catch(Exception ex)
+                {
+                    Serilog.Log.Error(ex.Message);
+                    ((NetSpeedItem)sender).SpeedChanged -= NetSpeedItem_SpeedChanged;
+                    OnClosed(EventArgs.Empty);
+                }
             });
         }
 

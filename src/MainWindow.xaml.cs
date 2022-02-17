@@ -17,6 +17,7 @@ namespace NetSpeed.Wpf
     {
         public List<NetSpeedItem> NetSpeedItems { get; set; }
         private readonly ObservableCollection<NetSpeedItem> ItemsToShowOnTaskBar = new ObservableCollection<NetSpeedItem>();
+        private TaskBarWindow taskBarWindow;
 
         public MainWindow()
         {
@@ -39,11 +40,19 @@ namespace NetSpeed.Wpf
                 }
             }
 
-            TaskBarWindow taskBarWindow = new TaskBarWindow(ItemsToShowOnTaskBar);
-            taskBarWindow.Show();
-            taskBarWindow.Hide();
+            CreateTaskbarWindow();
 
             Loaded += Onloaded;
+        }
+
+        private void CreateTaskbarWindow()
+        {
+            taskBarWindow = new TaskBarWindow(ItemsToShowOnTaskBar);
+            taskBarWindow.Closed += (s, e) =>
+            {
+                Serilog.Log.Information("Taskbar window was accidentally closed, reopening");
+                CreateTaskbarWindow();
+            };
         }
 
         private void Onloaded(object sender, RoutedEventArgs e)
