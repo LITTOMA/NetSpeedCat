@@ -13,6 +13,7 @@
     SizeToContent="Height"
     ShowInTaskbar="False"
     Visibility="Visible"
+    Width="200"
     WindowStyle="None"
     mc:Ignorable="d">
     <WindowChrome.WindowChrome>

@@ -53,7 +53,14 @@ namespace NetSpeed.Wpf
                 Hide();
             }
 
-            ((App)Application.Current).ShowNotifyIcon();
+            try
+            {
+                ((App)Application.Current).ShowNotifyIcon();
+            }
+            catch (Exception ex)
+            {
+                Serilog.Log.Error(ex, "Failed to show notify icon");
+            }
         }
 
         /// <summary>Brings main window to foreground.</summary>
