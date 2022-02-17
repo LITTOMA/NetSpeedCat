@@ -40,7 +40,7 @@ namespace NetSpeed.Wpf
 #if DEBUG
                 .WriteTo.Console()
 #endif
-                .WriteTo.File(Path.Combine(AppConfig.Default.AppDataFolder, "nsv.log"), fileSizeLimitBytes: 1048576, shared: true)
+                .WriteTo.File(Path.Combine(AppConfig.Default.AppDataFolder, "nsv.log"), fileSizeLimitBytes: 1048576, shared: true, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
                 .CreateLogger();
 
             bool isOwned;
