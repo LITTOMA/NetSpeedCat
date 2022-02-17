@@ -11,8 +11,6 @@ jobs:
     steps:
     - name: checkout code
       uses: actions/checkout@v2
-      with:
-        path: D:\nsc
       
     - name: setup msbuild
       uses: microsoft/setup-msbuild@v1
@@ -22,7 +20,7 @@ jobs:
 
     - name: build
       run: |
-        cd D:\nsc/src
+        cd src
         nuget restore
         msbuild /p:platform="Any CPU" /p:configuration="Release"
 
