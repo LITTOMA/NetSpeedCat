@@ -15,17 +15,18 @@ jobs:
     - name: setup msbuild
       uses: microsoft/setup-msbuild@v1
       
-    - name: setup nuget
-      uses: NuGet/setup-nuget@v1
+    - name: setup dotnet
+      uses: actions/setup-dotnet@v1
 
     - name: build
       run: |
         cd src
-        nuget restore
+        dotnet restore
         msbuild /p:platform="Any CPU" /p:configuration="Release"
+        cd ..
 
     - name: upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
         name: build
-        path: $GITHUB_WORKSPACE/src/bin/
+        path: src/bin/
