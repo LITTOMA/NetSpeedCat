@@ -63,6 +63,22 @@ namespace NetSpeed.Wpf
             e.Cancel = true;
         }
 
+        protected override void OnRender(DrawingContext drawingContext)
+        {
+            base.OnRender(drawingContext);
+
+            // Unlock the window
+            WindowPos.SetIsLocked(this, false);
+            Serilog.Log.Information("Unlocked window");
+
+            TaskBarHelper.PutSubWindow(this);
+            Serilog.Log.Information("Put window to taskbar");
+
+            // Lock the window
+            WindowPos.SetIsLocked(this, true);
+            Serilog.Log.Information("Locked window");
+        }
+
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             windowInteropHelper = new WindowInteropHelper(this);
@@ -181,32 +197,6 @@ namespace NetSpeed.Wpf
 
             UploadSpeed = NetSpeedItem.HumanReadableSpeed(totalUploadSpeed);
             DownloadSpeed = NetSpeedItem.HumanReadableSpeed(totalDownloadSpeed);
-
-            // Invoke on main thread
-            Dispatcher.Invoke(() =>
-            {
-                // Unlock the window
-                WindowPos.SetIsLocked(this, false);
-                Serilog.Log.Information("Unlocked window");
-
-                TaskBarHelper.PutSubWindow(this);
-                Serilog.Log.Information("Put window to taskbar");
-
-                // Lock the window
-                WindowPos.SetIsLocked(this, true);
-                Serilog.Log.Information("Locked window");
-
-                try
-                {
-                    Show();
-                }
-                catch(Exception ex)
-                {
-                    Serilog.Log.Error(ex.Message);
-                    ((NetSpeedItem)sender).SpeedChanged -= NetSpeedItem_SpeedChanged;
-                    OnClosed(EventArgs.Empty);
-                }
-            });
         }
 
         private void SetProperty<T>(ref T target, T value, [CallerMemberName] string propertyName = null)

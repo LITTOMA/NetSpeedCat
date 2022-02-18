@@ -62,15 +62,15 @@ namespace NetSpeed.Wpf
         public static void PutSubWindow(TaskBarWindow window)
         {
             // Get the window handle
-            IntPtr hwnd = window.Handle;
+            IntPtr nscHandle = window.Handle;
             // Get the taskbar handle
             IntPtr taskbarHandle = User32.FindWindow("Shell_TrayWnd", string.Empty);
 
             // Set parent
-            User32.SetParent(hwnd, taskbarHandle);
-            var style = User32.GetWindowLong(hwnd, User32.WindowLongIndexFlags.GWL_STYLE);
+            User32.SetParent(nscHandle, taskbarHandle);
+            var style = User32.GetWindowLong(nscHandle, User32.WindowLongIndexFlags.GWL_STYLE);
             style |= (int)User32.WindowStyles.WS_CHILD;
-            User32.SetWindowLong(hwnd, User32.WindowLongIndexFlags.GWL_STYLE, (User32.SetWindowLongFlags)style);
+            User32.SetWindowLong(nscHandle, User32.WindowLongIndexFlags.GWL_STYLE, (User32.SetWindowLongFlags)style);
 
             // Move window next to tray icon
             var trayLocation = GetTrayIconLocation();
@@ -79,12 +79,12 @@ namespace NetSpeed.Wpf
             User32.GetClientRect(taskbarHandle, out rectTb);
             if (taskbarLocation == TaskBarLocation.Top || taskbarLocation == TaskBarLocation.Bottom)
             {
-                User32.MoveWindow(hwnd, trayLocation.X - (int)window.Width, rectTb.top, (int)window.Width, (int)window.Height, true);
+                User32.MoveWindow(nscHandle, trayLocation.X - (int)window.Width, rectTb.top, (int)window.Width, (int)window.Height, true);
                 User32.UpdateWindow(taskbarHandle);
             }
             else
             {
-                User32.MoveWindow(hwnd, 0, trayLocation.Y - (int)window.Height, (int)window.Width, (int)window.Height, true);
+                User32.MoveWindow(nscHandle, 0, trayLocation.Y - (int)window.Height, (int)window.Width, (int)window.Height, true);
                 User32.UpdateWindow(taskbarHandle);
             }
         }
