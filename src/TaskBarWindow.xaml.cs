@@ -50,17 +50,7 @@ namespace NetSpeed.Wpf
         public TaskBarWindow(ObservableCollection<NetSpeedItem> netSpeedItems) : this()
         {
             this.netSpeedItems = netSpeedItems;
-            BindEvent(this.netSpeedItems);
-            this.netSpeedItems.CollectionChanged += NetSpeedItems_CollectionChanged;
             Loaded += OnLoaded;
-            Closing += TaskBarWindow_Closing;
-        }
-
-        private void TaskBarWindow_Closing(object sender, CancelEventArgs e)
-        {
-            Serilog.Log.Information("Some one is closing this window");
-            // Do not close the window
-            e.Cancel = true;
         }
 
         protected override void OnRender(DrawingContext drawingContext)
@@ -90,6 +80,9 @@ namespace NetSpeed.Wpf
 
             HwndSource hwndSource = HwndSource.FromHwnd(Handle);
             hwndSource.AddHook(new HwndSourceHook(WndProc));
+
+            BindEvent(this.netSpeedItems);
+            this.netSpeedItems.CollectionChanged += NetSpeedItems_CollectionChanged;
         }
 
         private const uint WM_SYSTEMMENU = 0xa4;
