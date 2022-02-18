@@ -50,8 +50,11 @@ namespace NetSpeed.Wpf
             taskBarWindow = new TaskBarWindow(ItemsToShowOnTaskBar);
             taskBarWindow.Closed += (s, e) =>
             {
-                Serilog.Log.Information("Taskbar window was accidentally closed, reopening");
-                CreateTaskbarWindow();
+                if (!((App)App.Current).IsShuttingDown)
+                {
+                    Serilog.Log.Error("Taskbar window was accidentally closed, reopening");
+                    CreateTaskbarWindow();
+                }
             };
         }
 

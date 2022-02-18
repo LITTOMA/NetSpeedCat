@@ -27,6 +27,8 @@ namespace NetSpeed.Wpf
         private AboutWindow aboutWindow;
         private System.Windows.Forms.NotifyIcon notifyIcon;
 
+        public bool IsShuttingDown { get; private set; }
+
         #endregion
 
         #region Methods
@@ -37,10 +39,21 @@ namespace NetSpeed.Wpf
         private void AppOnStartup(object sender, StartupEventArgs e)
         {
             Log.Logger = new LoggerConfiguration()
-#if DEBUG
+#if TRACE
                 .WriteTo.Console()
+                .WriteTo.File(
+                    Path.Combine(AppConfig.Default.AppDataFolder, "nsv.log"),
+                    shared: true,
+                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information
+                    )
+#else
+                .WriteTo.File(
+                    Path.Combine(AppConfig.Default.AppDataFolder, "nsv.log"),
+                    fileSizeLimitBytes: 1048576,
+                    shared: true,
+                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error
+                    )
 #endif
-                .WriteTo.File(Path.Combine(AppConfig.Default.AppDataFolder, "nsv.log"), fileSizeLimitBytes: 1048576, shared: true, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
                 .CreateLogger();
 
             bool isOwned;
@@ -127,6 +140,12 @@ namespace NetSpeed.Wpf
             });
 
             notifyIcon.DoubleClick += (s, e) => ((MainWindow)Application.Current.MainWindow).ToggleVisibility();
+        }
+
+        public new void Shutdown()
+        {
+            IsShuttingDown = true;
+            base.Shutdown();
         }
 
         #endregion

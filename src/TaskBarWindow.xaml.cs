@@ -225,7 +225,7 @@ namespace NetSpeed.Wpf
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            ((App)Application.Current).Shutdown();
         }
 
         private void Startup_Click(object sender, RoutedEventArgs e)
