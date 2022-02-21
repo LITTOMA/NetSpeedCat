@@ -10,10 +10,9 @@
     Background="Transparent"
     MouseDown="Window_MouseDown"
     ResizeMode="NoResize"
-    SizeToContent="WidthAndHeight"
     ShowInTaskbar="False"
+    SizeToContent="WidthAndHeight"
     Visibility="Visible"
-    Width="Auto"
     WindowStyle="None"
     mc:Ignorable="d">
     <WindowChrome.WindowChrome>

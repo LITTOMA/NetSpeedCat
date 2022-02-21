@@ -1,6 +1,7 @@
 using PInvoke;
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace NetSpeed.Wpf
 {
@@ -59,34 +60,135 @@ namespace NetSpeed.Wpf
             return new Point(rect.left, rect.top);
         }
 
-        public static void PutSubWindow(TaskBarWindow window)
+        delegate bool EnumChildProc(IntPtr hwnd, IntPtr lParam);
+        public static void PutSubWindow(IntPtr handle, System.Windows.Size size)
         {
             // Get the window handle
-            IntPtr nscHandle = window.Handle;
+            IntPtr nscHandle = handle;
+
+            if (nscHandle == IntPtr.Zero)
+                return;
+
             // Get the taskbar handle
             IntPtr taskbarHandle = User32.FindWindow("Shell_TrayWnd", string.Empty);
+            if (taskbarHandle == IntPtr.Zero)
+                return;
 
-            // Set parent
-            User32.SetParent(nscHandle, taskbarHandle);
-            var style = User32.GetWindowLong(nscHandle, User32.WindowLongIndexFlags.GWL_STYLE);
-            style |= (int)User32.WindowStyles.WS_CHILD;
-            User32.SetWindowLong(nscHandle, User32.WindowLongIndexFlags.GWL_STYLE, (User32.SetWindowLongFlags)style);
+            // Get ReBarWindow32 handle
+            IntPtr rebarHandle = User32.FindWindowEx(taskbarHandle, IntPtr.Zero, "ReBarWindow32", string.Empty);
+            if (rebarHandle == IntPtr.Zero)
+                return;
 
-            // Move window next to tray icon
-            var trayLocation = GetTrayIconLocation();
+            // Get MSTaskSwWClass handle
+            IntPtr mstaskHandle = User32.FindWindowEx(rebarHandle, IntPtr.Zero, "MSTaskSwWClass", null);
+            if (mstaskHandle == IntPtr.Zero)
+                return;
+
+
+            var isChild = User32.IsChild(rebarHandle, nscHandle);
+            if (!isChild)
+            {
+                // Set parent
+                User32.SetParent(nscHandle, rebarHandle);
+                var style = User32.GetWindowLong(nscHandle, User32.WindowLongIndexFlags.GWL_STYLE);
+                style |= (int)User32.WindowStyles.WS_CHILD;
+                User32.SetWindowLong(nscHandle, User32.WindowLongIndexFlags.GWL_STYLE, (User32.SetWindowLongFlags)style);
+            }
+
+
+            // Get the client rect of nscHandle
+            User32.GetClientRect(nscHandle, out RECT nscClientRect);
+            // Get the client rect of rebarHandle
+            User32.GetClientRect(rebarHandle, out RECT rebarClientRect);
+            // Get the client rect of mstaskHandle
+            User32.GetClientRect(mstaskHandle, out RECT mstaskClientRect);
+            // Get the window rect of rebarHandle
+            User32.GetWindowRect(rebarHandle, out RECT rebarWindowRect);
+
+            Rectangle nscRectangle = new Rectangle();
+            Rectangle msTaskRectangle = new Rectangle();
+
+            nscRectangle.Width = (int)size.Width;
+            nscRectangle.Height = (int)size.Height;
+
+            msTaskRectangle.X = mstaskClientRect.left;
+            msTaskRectangle.Y = mstaskClientRect.top;
+
             var taskbarLocation = GetTaskBarLocation();
-            RECT rectTb;
-            User32.GetClientRect(taskbarHandle, out rectTb);
             if (taskbarLocation == TaskBarLocation.Top || taskbarLocation == TaskBarLocation.Bottom)
             {
-                User32.MoveWindow(nscHandle, trayLocation.X - (int)window.Width, rectTb.top, (int)window.Width, (int)window.Height, true);
-                User32.UpdateWindow(taskbarHandle);
+                // Find the leftmost child window of ReBarWindow32, except the MSTaskSwWClass window
+                IntPtr leftmostChildHandle = IntPtr.Zero;
+                int leftSide = rebarClientRect.right;
+                EnumChildProc enumChildProc = delegate (IntPtr hwnd, IntPtr lParam)
+                {
+                    if (hwnd == mstaskHandle || User32.IsChild(mstaskHandle, hwnd) || hwnd == nscHandle)
+                        return true;
+
+                    RECT rect = new RECT();
+                    User32.GetWindowRect(hwnd, out rect);
+                    if (rect.left < leftSide)
+                    {
+                        leftSide = rect.left;
+                        leftmostChildHandle = hwnd;
+                    }
+                    return true;
+                };
+                User32.EnumChildWindows(rebarHandle, Marshal.GetFunctionPointerForDelegate(enumChildProc), IntPtr.Zero);
+
+
+                nscRectangle.X = leftSide - rebarWindowRect.left - (int)size.Width;
+                nscRectangle.Y = nscClientRect.top;
+                msTaskRectangle.Width = nscRectangle.X;
+                msTaskRectangle.Height = rebarClientRect.bottom - rebarClientRect.top;
             }
             else
             {
-                User32.MoveWindow(nscHandle, 0, trayLocation.Y - (int)window.Height, (int)window.Width, (int)window.Height, true);
-                User32.UpdateWindow(taskbarHandle);
+                // Find the topmost child window of ReBarWindow32, except the MSTaskSwWClass window
+                IntPtr topmostChildHandle = IntPtr.Zero;
+                int topSide = rebarClientRect.bottom;
+                EnumChildProc enumChildProc = delegate (IntPtr hwnd, IntPtr lParam)
+                {
+                    if (hwnd == mstaskHandle || User32.IsChild(mstaskHandle, hwnd) || hwnd == nscHandle)
+                        return true;
+
+                    RECT rect = new RECT();
+                    User32.GetWindowRect(hwnd, out rect);
+                    if (rect.top < topSide)
+                    {
+                        topSide = rect.top;
+                        topmostChildHandle = hwnd;
+                    }
+                    return true;
+                };
+                User32.EnumChildWindows(rebarHandle, Marshal.GetFunctionPointerForDelegate(enumChildProc), IntPtr.Zero);
+
+
+                nscRectangle.X = nscClientRect.left;
+                nscRectangle.Y = topSide - rebarWindowRect.top - (int)size.Height;
+                msTaskRectangle.Width = rebarClientRect.right - rebarClientRect.left;
+                msTaskRectangle.Height = nscRectangle.Y;
             }
+
+            // Put nsc tb window to the taskbar
+            User32.MoveWindow(
+                nscHandle,
+                nscRectangle.X,
+                nscRectangle.Y,
+                nscRectangle.Width,
+                nscRectangle.Height,
+                true);
+
+            // Change height of mstask window
+            User32.MoveWindow(
+                mstaskHandle,
+                msTaskRectangle.X,
+                msTaskRectangle.Y,
+                msTaskRectangle.Width,
+                msTaskRectangle.Height,
+                true);
+
+            User32.UpdateWindow(taskbarHandle);
         }
     }
 }
