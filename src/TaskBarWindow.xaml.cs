@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -33,6 +34,7 @@ namespace NetSpeed.Wpf
         }
 
         private WindowInteropHelper windowInteropHelper;
+        private Size lastSize;
 
         public IntPtr Handle { get; private set; }
 
@@ -53,22 +55,6 @@ namespace NetSpeed.Wpf
             Loaded += OnLoaded;
         }
 
-        protected override void OnRender(DrawingContext drawingContext)
-        {
-            base.OnRender(drawingContext);
-
-            // Unlock the window
-            WindowPos.SetIsLocked(this, false);
-            Serilog.Log.Information("Unlocked window");
-
-            TaskBarHelper.PutSubWindow(this);
-            Serilog.Log.Information("Put window to taskbar");
-
-            // Lock the window
-            WindowPos.SetIsLocked(this, true);
-            Serilog.Log.Information("Locked window");
-        }
-
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             windowInteropHelper = new WindowInteropHelper(this);
@@ -81,8 +67,47 @@ namespace NetSpeed.Wpf
             HwndSource hwndSource = HwndSource.FromHwnd(Handle);
             hwndSource.AddHook(new HwndSourceHook(WndProc));
 
-            BindEvent(this.netSpeedItems);
-            this.netSpeedItems.CollectionChanged += NetSpeedItems_CollectionChanged;
+
+            Task.Run(async () =>
+            {
+                await Task.Delay(1000);
+
+                Dispatcher.Invoke(() =>
+                {
+                    // SizeToContent = SizeToContent.Height;
+                    BindEvent(this.netSpeedItems);
+                    this.netSpeedItems.CollectionChanged += NetSpeedItems_CollectionChanged;
+                });
+            });
+        }
+
+        protected override Size ArrangeOverride(Size arrangeBounds)
+        {
+            var size = base.ArrangeOverride(arrangeBounds);
+
+            if (lastSize == null ||
+                Convert.ToInt32(size.Width) != Convert.ToInt32(lastSize.Width) ||
+                Convert.ToInt32(size.Height) != Convert.ToInt32(lastSize.Height))
+            {
+                lastSize = size;
+                Serilog.Log.Warning($"ArrangeOverride: w:{size.Width}, h:{size.Height}");
+                PutTaskbarWindow(size);
+            }
+            return size;
+        }
+
+        private void PutTaskbarWindow(Size size)
+        {
+            // Unlock the window
+            WindowPos.SetIsLocked(this, false);
+            Serilog.Log.Information("Unlocked window");
+
+            TaskBarHelper.PutSubWindow(this.Handle, size);
+            Serilog.Log.Information("Put window to taskbar");
+
+            // Lock the window
+            WindowPos.SetIsLocked(this, true);
+            Serilog.Log.Information("Locked window");
         }
 
         private const uint WM_SYSTEMMENU = 0xa4;

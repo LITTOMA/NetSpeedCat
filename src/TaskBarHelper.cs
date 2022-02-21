@@ -61,10 +61,10 @@ namespace NetSpeed.Wpf
         }
 
         delegate bool EnumChildProc(IntPtr hwnd, IntPtr lParam);
-        public static void PutSubWindow(TaskBarWindow window)
+        public static void PutSubWindow(IntPtr handle, System.Windows.Size size)
         {
             // Get the window handle
-            IntPtr nscHandle = window.Handle;
+            IntPtr nscHandle = handle;
 
             if (nscHandle == IntPtr.Zero)
                 return;
@@ -108,8 +108,8 @@ namespace NetSpeed.Wpf
             Rectangle nscRectangle = new Rectangle();
             Rectangle msTaskRectangle = new Rectangle();
 
-            nscRectangle.Width = (int)window.Width;
-            nscRectangle.Height = (int)window.Height;
+            nscRectangle.Width = (int)size.Width;
+            nscRectangle.Height = (int)size.Height;
 
             msTaskRectangle.X = mstaskClientRect.left;
             msTaskRectangle.Y = mstaskClientRect.top;
@@ -137,7 +137,7 @@ namespace NetSpeed.Wpf
                 User32.EnumChildWindows(rebarHandle, Marshal.GetFunctionPointerForDelegate(enumChildProc), IntPtr.Zero);
 
 
-                nscRectangle.X = leftSide - rebarWindowRect.left - (int)window.Width;
+                nscRectangle.X = leftSide - rebarWindowRect.left - (int)size.Width;
                 nscRectangle.Y = nscClientRect.top;
                 msTaskRectangle.Width = nscRectangle.X;
                 msTaskRectangle.Height = rebarClientRect.bottom - rebarClientRect.top;
@@ -165,7 +165,7 @@ namespace NetSpeed.Wpf
 
 
                 nscRectangle.X = nscClientRect.left;
-                nscRectangle.Y = topSide - rebarWindowRect.top - (int)window.Height;
+                nscRectangle.Y = topSide - rebarWindowRect.top - (int)size.Height;
                 msTaskRectangle.Width = rebarClientRect.right - rebarClientRect.left;
                 msTaskRectangle.Height = nscRectangle.Y;
             }
