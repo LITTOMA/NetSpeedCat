@@ -133,7 +133,6 @@ namespace NetSpeed.Wpf
             notifyIcon.ContextMenuStrip.Items.Add(NetSpeed.Wpf.Properties.Resources.Exit, null, (s, e) =>
             {
                 notifyIcon.Visible = false;
-                notifyIcon.Dispose();
                 Shutdown();
             });
 

@@ -90,7 +90,6 @@ namespace NetSpeed.Wpf
                 Convert.ToInt32(size.Height) != Convert.ToInt32(lastSize.Height))
             {
                 lastSize = size;
-                Serilog.Log.Warning($"ArrangeOverride: w:{size.Width}, h:{size.Height}");
                 PutTaskbarWindow(size);
             }
             return size;
