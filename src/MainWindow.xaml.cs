@@ -105,9 +105,12 @@ namespace NetSpeed.Wpf
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            // Hide the window
-            e.Cancel = true;
-            Hide();
+            if (!((App)App.Current).IsShuttingDown)
+            {
+                // Hide the window
+                e.Cancel = true;
+                Hide();
+            }
         }
 
         private void NetInterfaceCheckBox_Checked(object sender, RoutedEventArgs e)
