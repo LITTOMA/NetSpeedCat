@@ -132,16 +132,18 @@ namespace NetSpeed.Wpf
 
             notifyIcon.ContextMenuStrip.Items.Add(NetSpeed.Wpf.Properties.Resources.Exit, null, (s, e) =>
             {
-                notifyIcon.Visible = false;
                 Shutdown();
             });
 
             notifyIcon.DoubleClick += (s, e) => ((MainWindow)Application.Current.MainWindow).ToggleVisibility();
         }
 
+        public event EventHandler ShuttingDown;
         public new void Shutdown()
         {
             IsShuttingDown = true;
+            ShuttingDown?.Invoke(this, EventArgs.Empty);
+            notifyIcon.Dispose();
             base.Shutdown();
         }
 

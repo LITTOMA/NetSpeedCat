@@ -65,7 +65,6 @@ namespace NetSpeed.Wpf
         {
             // Get the window handle
             IntPtr nscHandle = handle;
-
             if (nscHandle == IntPtr.Zero)
                 return;
 

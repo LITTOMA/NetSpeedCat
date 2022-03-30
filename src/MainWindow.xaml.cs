@@ -48,13 +48,9 @@ namespace NetSpeed.Wpf
         private void CreateTaskbarWindow()
         {
             taskBarWindow = new TaskBarWindow(ItemsToShowOnTaskBar);
-            taskBarWindow.Closed += (s, e) =>
+            ((App)App.Current).ShuttingDown += (s, e) =>
             {
-                if (!((App)App.Current).IsShuttingDown)
-                {
-                    Serilog.Log.Error("Taskbar window was accidentally closed, reopening");
-                    CreateTaskbarWindow();
-                }
+                taskBarWindow.Close();
             };
         }
 
