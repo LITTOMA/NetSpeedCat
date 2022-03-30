@@ -79,6 +79,8 @@ namespace NetSpeed.Wpf
                     this.netSpeedItems.CollectionChanged += NetSpeedItems_CollectionChanged;
                 });
             });
+
+            this.Visibility = Visibility.Hidden;
         }
 
         protected override Size ArrangeOverride(Size arrangeBounds)
@@ -91,6 +93,11 @@ namespace NetSpeed.Wpf
             {
                 lastSize = size;
                 PutTaskbarWindow(size);
+            }
+
+            if (this.Visibility != Visibility.Visible)
+            {
+                this.Visibility = Visibility.Visible;
             }
             return size;
         }
